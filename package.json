@@ -19,7 +19,9 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
+    "@octokit/rest": "^21.1.1",
     "@payloadcms/admin-bar": "latest",
+    "@payloadcms/db-sqlite": "latest",
     "@payloadcms/live-preview-react": "latest",
     "@payloadcms/next": "latest",
     "@payloadcms/payload-cloud": "latest",
@@ -31,7 +33,10 @@
     "@payloadcms/richtext-lexical": "latest",
     "@payloadcms/ui": "latest",
     "@radix-ui/react-checkbox": "^1.0.4",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-hover-card": "^1.1.6",
     "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-navigation-menu": "^1.2.5",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
@@ -42,6 +47,7 @@
     "lucide-react": "^0.378.0",
     "next": "15.2.2",
     "next-sitemap": "^4.2.3",
+    "next-themes": "^0.4.6",
     "payload": "latest",
     "prism-react-renderer": "^2.3.1",
     "react": "19.0.0",
@@ -49,8 +55,7 @@
     "react-hook-form": "7.45.4",
     "sharp": "0.32.6",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7",
-    "@payloadcms/db-sqlite": "latest"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

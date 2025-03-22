@@ -26,7 +26,7 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      //required: true,
+      required: true,
     },
     {
       name: 'caption',
@@ -52,6 +52,12 @@ export const Media: CollectionConfig = {
         name: 'square',
         width: 500,
         height: 500,
+      },
+      {
+        name: 'carouselImage',
+        width: 1000,
+        height: 1000,
+        crop: 'center',
       },
       {
         name: 'small',

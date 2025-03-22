@@ -1,4 +1,4 @@
-import type { Metadata } from 'next/types'
+'use server'
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -6,58 +6,80 @@ import React from 'react'
 import Navbar from '@/components/ui/navbar'
 import Footer from '@/components/ui/footer'
 import RichText from '@/components/RichText'
-
-export const dynamic = 'force-static'
-export const revalidate = 600
+import Link from 'next/link'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Post } from '@/payload-types'
 
 export default async function Page() {
   const payload = await getPayload({ config: configPromise })
 
   const posts = await payload.find({
-    collection: 'blogposts',
+    collection: 'posts',
     depth: 1,
     limit: 12,
     overrideAccess: false,
     pagination: false,
+    sort: '-publishedAt',
     select: {
       title: true,
       slug: true,
       content: true,
+      publishedAt: true,
     },
   })
 
   return (
     <>
       <Navbar />
-      <div>
-        <div className="grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-12 gap-y-4 gap-x-4 lg:gap-y-8 lg:gap-x-8 xl:gap-x-8">
-          {posts.docs?.map((result, index) => {
-            if (typeof result === 'object' && result !== null) {
-              return (
-                <div className="col-span-4" key={index}>
-                  <h2 className="text-2xl font-bold">{result.title}</h2>
-                  <RichText content={result.content} />
-                </div>
-              )
-            } else
-              return (
-                <div className="col-span-4" key={index}>
-                  <h2 className="text-2xl font-bold">No title</h2>
-                  <p>No posts found</p>
-                </div>
-              )
-
-            return null
-          })}
+      <main className="container mx-auto px-4 py-8 md:py-12">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-4">Blog</h1>
+          <p className="text-xl text-muted-foreground">Latest articles and updates</p>
         </div>
-      </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {posts.docs?.length > 0 ? (
+            posts.docs.map((post, index) => {
+              const typedPost = post as Post
+              return (
+                <Card key={index} className="flex flex-col h-full">
+                  <CardHeader>
+                    <CardTitle>{typedPost.title}</CardTitle>
+                    {typedPost.publishedAt && (
+                      <CardDescription>
+                        {new Date(typedPost.publishedAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </CardDescription>
+                    )}
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <div className="line-clamp-3">
+                      <RichText data={typedPost.content} enableProse={false} />
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button asChild variant="outline">
+                      <Link href={`/blog/${typedPost.slug}`}>
+                        Read More
+                      </Link>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              )
+            })
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <h2 className="text-2xl font-bold mb-2">No posts yet</h2>
+              <p className="text-muted-foreground">Check back later for new content</p>
+            </div>
+          )}
+        </div>
+      </main>
       <Footer />
     </>
   )
-}
-
-export function generateMetadata(): Metadata {
-  return {
-    title: `Payload Website Template Posts`,
-  }
 }

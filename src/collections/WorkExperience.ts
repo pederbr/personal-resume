@@ -1,7 +1,15 @@
-import { CollectionConfig } from 'payload';
+import { anyone } from '@/access/anyone'
+import { authenticated } from '@/access/authenticated'
+import { CollectionConfig } from 'payload'
 
 export const WorkExperience: CollectionConfig = {
   slug: 'experience',
+  access: {
+    create: authenticated,
+    delete: authenticated,
+    read: anyone,
+    update: authenticated,
+  },
   fields: [
     {
       name: 'Title',
@@ -18,7 +26,7 @@ export const WorkExperience: CollectionConfig = {
       type: 'date',
       required: true,
     },
-   
+
     {
       name: 'Current',
       type: 'checkbox',
@@ -28,32 +36,32 @@ export const WorkExperience: CollectionConfig = {
           ({ value, data }) => {
             if (value) {
               if (data) {
-                data.EndDate = null;
+                data.EndDate = null
               }
             }
-            return value;
+            return value
           },
         ],
       },
     },
     {
-        name: 'EndDate',
-        type: 'date',
-        required: false,
-        validate: (value, { data }: { data: { Current?: boolean } }) => {
-          if (!data.Current && !value) {
-            return 'EndDate is required if Current is not checked';
-          }
-          return true;
-        },
-        admin: {
-          condition: (data) => !data?.Current,
-        },
+      name: 'EndDate',
+      type: 'date',
+      required: false,
+      validate: (value, { data }: { data: { Current?: boolean } }) => {
+        if (!data.Current && !value) {
+          return 'EndDate is required if Current is not checked'
+        }
+        return true
       },
+      admin: {
+        condition: (data) => !data?.Current,
+      },
+    },
     {
       name: 'Description',
-      type: 'text',
+      type: 'richText',
       required: true,
     },
   ],
-};
+}

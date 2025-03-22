@@ -1,42 +1,60 @@
-'use client'
+'use server'
 
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
 import Footer from '@/components/ui/footer'
 import Navbar from '@/components/ui/navbar'
 import { H2, P } from '@/components/ui/typography'
 import Image from 'next/image'
+import { Media, Experience } from '@/payload-types'
 
-const images = [
-  '/carousel/1.jpeg',
-  '/carousel/2.jpeg',
-  '/carousel/3.jpeg',
-  '/carousel/4.jpeg',
-  '/carousel/5.jpeg',
-]
+async function getImages(): Promise<Media[]> {
+  try {
+    const payload = await getPayload({ config: configPromise })
 
-const WorkExperience = [
-  {
-    title: 'Junior Consulting',
-    role: 'Technical Consultant',
-    date: 'Sept 2024 - Present',
-    description:
-      'Working as technical consultant at Junior Consulting, where I focus on full-stack development.',
-  },
-  {
-    title: 'Asker Library',
-    role: 'Programming Instructor',
-    date: 'August 2020 - June 2021',
-    description: 'Teaching programming using the no-code tool Scratch.',
-  },
-  {
-    title: 'Norwegian Army',
-    role: 'Troop assistant',
-    date: 'August 2022 - July 2023',
-    description:
-      'Troop assistant in the Norwegian Army, supplying necessary equipment and assisting over 60 soldiers.',
-  },
-]
+    const media = await payload.find({
+      collection: 'media',
+      depth: 1,
+      limit: 12,
+      overrideAccess: false,
+      pagination: false,
+    })
+    return media.docs
+  } catch (error) {
+    console.error('Error fetching Images:', error)
+    return []
+  }
+}
 
-const HomePage = () => {
+async function getWorkExperience(): Promise<Experience[]> {
+  try {
+    const payload = await getPayload({ config: configPromise })
+
+    const experience = await payload.find({
+      collection: 'experience',
+      depth: 1,
+      limit: 12,
+      overrideAccess: false,
+      pagination: false,
+    })
+    return experience.docs
+  } catch (error) {
+    console.error('Error fetching work experience:', error)
+    return []
+  }
+}
+
+export default async function HomePage() {
+  const workExperience = await getWorkExperience()
+  const images = await getImages()
+
   return (
     <>
       <Navbar />
@@ -50,32 +68,40 @@ const HomePage = () => {
               about creating high-quality solutions to complex problems.{' '}
             </P>
           </div>
-          <div className="w-full xl:w-1/2 xl:pl-10">
-            {images.map((src, index) => (
-              <div key={index}>
-                <Image
-                  src={src}
-                  alt={`Carousel image ${index + 1}`}
-                  width={500}
-                  height={500}
-                  className="rounded border border-gray-600"
-                />
-              </div>
-            ))}
-          </div>
+          {images.length > 0 && (
+            <Carousel className="w-full max-w-[500px]">
+              <CarouselContent>
+                {images.map((media, index) => (
+                  <CarouselItem key={index}>
+                    <Image
+                      src={media.sizes?.carouselImage?.url || media.url || ''}
+                      alt={media.alt || `Carousel image ${index + 1}`}
+                      width={500}
+                      height={500}
+                      className="rounded border border-gray-600 object-cover w-[500px] h-[500px]"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          )}
           <div className="border-b mx-10s my-20 w-full "></div>
           <H2 className="mb-10 w-full">Work Experience</H2>
           <div className="flex flex-wrap -mx-2">
-            {WorkExperience.map((job, index) => (
+            {workExperience.map((job: Experience, index: number) => (
               <div key={index} className="w-full md:w-1/2 lg:w-1/3 px-2 my-2">
                 <div
                   className={`min-h-[300px] rounded-lg p-4 mb-4 border hover:bg-primary-foreground flex flex-col justify-between
                     `}
                 >
-                  <H2>{job.title}</H2>
-                  <P>{job.role}</P>
-                  <P>{job.date}</P>
-                  <P>{job.description}</P>
+                  <H2>{job.Title}</H2>
+                  <P>{job.Role}</P>
+                  <P>
+                    {job.StartDate} - {job.EndDate}
+                  </P>
+                  <P>{String(job.Description)}</P>
                 </div>
               </div>
             ))}
@@ -86,5 +112,3 @@ const HomePage = () => {
     </>
   )
 }
-
-export default HomePage

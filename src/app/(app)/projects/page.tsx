@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Octokit } from "octokit";
+import { Octokit } from "@octokit/rest";
 import Link from "next/link";
 import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/ui/footer";
 import { H2, H3, Muted, P } from "@/components/ui/typography";
 import { Briefcase, Bot, Atom, Code, Codepen, Coffee, Cpu, Database } from 'lucide-react';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { LucideProps } from 'lucide-react';
 
 interface Repository {
   id: number;
@@ -16,6 +18,7 @@ interface Repository {
   language: string | null;
 }
 const icons = [Briefcase, Bot, Atom, Code, Codepen, Coffee, Cpu, Database];
+type IconType = ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
 
 
 export default function AboutPage() {
@@ -51,7 +54,8 @@ export default function AboutPage() {
         <P>These are some of the recent porjects from my GitHub page. They are imported directly to this site via the GitHub API. For more info about each project, click the cards.</P>
         <div className="flex flex-wrap -mx-2">
         {repos.map((repo) => {
-            const Icon = icons[Math.floor(Math.random() * icons.length)];
+            const randomIndex = Math.floor(Math.random() * icons.length);
+            const Icon: IconType = icons[randomIndex] || Briefcase;
             return (
               repo.description && (
                 <div key={repo.id} className="w-full md:w-1/2 lg:w-1/3 px-2 my-2">

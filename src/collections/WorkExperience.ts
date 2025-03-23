@@ -1,5 +1,6 @@
 import { anyone } from '@/access/anyone'
 import { authenticated } from '@/access/authenticated'
+import { slugField } from '@/fields/slug'
 import { CollectionConfig } from 'payload'
 
 export const WorkExperience: CollectionConfig = {
@@ -63,5 +64,16 @@ export const WorkExperience: CollectionConfig = {
       type: 'richText',
       required: true,
     },
+    {
+      name: 'Company',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'Location',
+      type: 'text',
+      required: true,
+    },
+    ...slugField(),
   ],
 }

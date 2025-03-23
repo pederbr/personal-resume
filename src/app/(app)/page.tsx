@@ -13,7 +13,16 @@ import Footer from '@/components/ui/footer'
 import Navbar from '@/components/ui/navbar'
 import { H2, P } from '@/components/ui/typography'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Media, Experience } from '@/payload-types'
+
+// Format date from ISO string to "Month Year" format
+function formatDate(dateString: string): string {
+  if (!dateString) return ''
+
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+}
 
 async function getImages(): Promise<Media[]> {
   try {
@@ -69,7 +78,7 @@ export default async function HomePage() {
             </P>
           </div>
           {images.length > 0 && (
-            <Carousel className="w-full max-w-[500px]">
+            <Carousel className="w-full max-w-[500px] xl:w-1/2 xl:pl-10">
               <CarouselContent>
                 {images.map((media, index) => (
                   <CarouselItem key={index}>
@@ -78,7 +87,7 @@ export default async function HomePage() {
                       alt={media.alt || `Carousel image ${index + 1}`}
                       width={500}
                       height={500}
-                      className="rounded border border-gray-600 object-cover w-[500px] h-[500px]"
+                      className="rounded border border-secondary object-cover w-[500px] h-[500px]"
                     />
                   </CarouselItem>
                 ))}
@@ -92,17 +101,32 @@ export default async function HomePage() {
           <div className="flex flex-wrap -mx-2">
             {workExperience.map((job: Experience, index: number) => (
               <div key={index} className="w-full md:w-1/2 lg:w-1/3 px-2 my-2">
-                <div
-                  className={`min-h-[300px] rounded-lg p-4 mb-4 border hover:bg-primary-foreground flex flex-col justify-between
-                    `}
-                >
-                  <H2>{job.Title}</H2>
-                  <P>{job.Role}</P>
-                  <P>
-                    {job.StartDate} - {job.EndDate}
-                  </P>
-                  <P>{String(job.Description)}</P>
-                </div>
+                {job.slug ? (
+                  <Link href={`/experiences/${job.slug}`}>
+                    <div
+                      className={`min-h-[300px] rounded-lg p-4 mb-4 border hover:bg-primary-foreground flex flex-col justify-between
+                      cursor-pointer transition-colors duration-200`}
+                    >
+                      <H2>{job.Title}</H2>
+                      <P>{job.Role}</P>
+                      <P>
+                        {formatDate(job.StartDate)} -{' '}
+                        {job.EndDate ? formatDate(job.EndDate) : 'Present'}
+                      </P>
+                    </div>
+                  </Link>
+                ) : (
+                  <div
+                    className={`min-h-[300px] rounded-lg p-4 mb-4 border flex flex-col justify-between`}
+                  >
+                    <H2>{job.Title}</H2>
+                    <P>{job.Role}</P>
+                    <P>
+                      {formatDate(job.StartDate)} -{' '}
+                      {job.EndDate ? formatDate(job.EndDate) : 'Present'}
+                    </P>
+                  </div>
+                )}
               </div>
             ))}
           </div>

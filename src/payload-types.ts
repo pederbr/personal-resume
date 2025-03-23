@@ -757,6 +757,10 @@ export interface Experience {
     };
     [k: string]: unknown;
   };
+  Company: string;
+  Location: string;
+  slug?: string | null;
+  slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1329,6 +1333,10 @@ export interface ExperienceSelect<T extends boolean = true> {
   Current?: T;
   EndDate?: T;
   Description?: T;
+  Company?: T;
+  Location?: T;
+  slug?: T;
+  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
 }

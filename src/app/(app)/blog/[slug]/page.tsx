@@ -53,9 +53,9 @@ export default async function Page({ params }: Props) {
               </time>
             )}
           </header>
-          
-          <div className="prose dark:prose-invert prose-lg max-w-none">
-            <RichText data={postData.content} />
+
+          <div>
+            <RichText data={postData.content} className="prose-lg" />
           </div>
         </article>
       </main>

@@ -62,8 +62,8 @@ export default async function Page({ params }: Props) {
             )}
           </header>
 
-          <div className="prose dark:prose-invert prose-lg max-w-none">
-            <RichText data={experienceData.Description} />
+          <div>
+            <RichText data={experienceData.Description} className="prose-lg" />
           </div>
         </article>
       </main>

@@ -50,30 +50,32 @@ export default async function Page() {
             posts.docs.map((post, index) => {
               const typedPost = post as Post
               return (
-                <Card key={index} className="flex flex-col h-full">
-                  <CardHeader>
-                    <CardTitle>{typedPost.title}</CardTitle>
-                    {typedPost.publishedAt && (
-                      <CardDescription>
-                        {new Date(typedPost.publishedAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
-                      </CardDescription>
-                    )}
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <div className="line-clamp-3">
-                      <RichText data={typedPost.content} enableProse={false} />
+                <Link href={`/blog/${typedPost.slug}`} key={index}>
+                  <div className="min-h-[300px] rounded-lg p-4 mb-4 border hover:bg-primary-foreground flex flex-col justify-between cursor-pointer transition-colors duration-200 h-full">
+                    <div>
+                      <h2 className="text-2xl font-semibold">{typedPost.title}</h2>
+                      {typedPost.publishedAt && (
+                        <p className="text-muted-foreground">
+                          {new Date(typedPost.publishedAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })}
+                        </p>
+                      )}
                     </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button asChild variant="outline">
-                      <Link href={`/blog/${typedPost.slug}`}>Read More</Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
+                    <div className="line-clamp-3 my-4">
+                      <RichText
+                        data={typedPost.content}
+                        enableProse={false}
+                        className="text-muted-foreground"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium">Read More</span>
+                    </div>
+                  </div>
+                </Link>
               )
             })
           ) : (

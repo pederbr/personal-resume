@@ -1,5 +1,3 @@
-'use server'
-
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'

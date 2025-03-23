@@ -9,13 +9,7 @@ import RichText from '@/components/RichText'
 import { notFound } from 'next/navigation'
 import { Post } from '@/payload-types'
 
-type Props = {
-  params: {
-    slug: string
-  }
-}
-
-export default async function Page({ params }: Props) {
+export default async function Page({ params }: { params: { slug: string } }) {
   const { slug } = params
   const payload = await getPayload({ config: configPromise })
 

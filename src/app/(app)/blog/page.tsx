@@ -7,15 +7,6 @@ import Navbar from '@/components/ui/navbar'
 import Footer from '@/components/ui/footer'
 import RichText from '@/components/RichText'
 import Link from 'next/link'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Post } from '@/payload-types'
 
 export default async function Page() {
